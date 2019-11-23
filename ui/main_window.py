@@ -55,15 +55,17 @@ class Window(QWidget):
                     allow = False
             else:
                 allow = False
+        # When allowed the tittle screen should change to the user tag
         if allow:
-            self.setWindowTitle("Bem-vindo ao PyCasmar! - {}".format(user))
-            self.lbl_msg.setText("Logon realizado com sucesso.")
-            self.lbl_msg.adjustSize()
-            self.lbl_msg.move(300, 325)
+            self.setWindowTitle("Bem-vindo ao PyAtena! - {}".format(user))
+            # In here we change to the real program window
+            
+        # If not allowed the lbl_msg then change to display a error message.
         else:
             self.lbl_msg.setText("Usuario ou Senha Incorretos.")
             self.lbl_msg.adjustSize()
             self.lbl_msg.move(300, 325)
+
 
 def main():
     app = QApplication(sys.argv)
