@@ -9,6 +9,7 @@ class Window(QWidget):
         self.setWindowIcon(QtGui.QIcon("media/pylogo.png"))
         self.setWindowTitle("Bem-vindo ao PyCasmar! - Favor Realizar Login")
         self.setGeometry(200, 200, 800, 600)
+        self.login_attempts = 3
         self.ui()
 
     # Create the User Interface
@@ -35,6 +36,8 @@ class Window(QWidget):
         # Create and configure a label to display a message to the user asking for the login
         self.lbl_msg = QLabel("Aguardando autenticação", self)
         self.lbl_msg.move(310, 325)
+        self.lbl_msg2 = QLabel(self)
+        self.lbl_msg2.move(310, 325)
 
     def check_values(self):
         # Get user and password text
@@ -47,9 +50,9 @@ class Window(QWidget):
         with open("user_registration/user_registration.csv") as csv_file:
             content = pd.read_csv(csv_file, delimiter=',')
             # Check if the user exist in the file
-            if content['user'].isin([user])[0]:
+            if True in content['user'].isin([user]):
                 # If it does then look for the corresponding password and compare to the password text box value
-                if content[content['user'] == user]['pass'][0].astype('str') == password:
+                if content[content['user'] == user]['pass'].to_string(index=False).strip() == password:
                     allow = True
                 else:
                     allow = False
@@ -62,10 +65,16 @@ class Window(QWidget):
             
         # If not allowed the lbl_msg then change to display a error message.
         else:
+            self.login_attempts -= 1
             self.lbl_msg.setText("Usuario ou Senha Incorretos.")
             self.lbl_msg.adjustSize()
             self.lbl_msg.move(300, 325)
-
+            self.lbl_msg2.setText("{} tentativas restantes.".format(self.login_attempts))
+            self.lbl_msg2.adjustSize()
+            self.lbl_msg2.move(300, 355)
+        
+        if self.login_attempts == 0:
+            sys.exit()
 
 def main():
     app = QApplication(sys.argv)
